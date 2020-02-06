@@ -36,7 +36,7 @@ def main():
     file = open("Datasets/adult.data", "r")
     lineList = []
     lines = file.readlines()
-    data = np.empty([48842, 14])
+    data = np.empty([48842, 14], str)        ## initialize stuff to int by default?
     for i in range(len(lines)):
         features =  lines[i].split(",")
         for j in range(len(features) - 2):
