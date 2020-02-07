@@ -1,13 +1,8 @@
 {
-<<<<<<< HEAD
-    "python.pythonPath": "C:\\Users\\thoma\\Anaconda3\\python.exe",
+    "python.pythonPath": "D:\\Anaconda\\python.exe",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.pythonPath": "C:\\Users\\huynh\\Anaconda3\\python.exe",
     "python.pythonPath": "C:\\Users\\JamesHuynh\\Anaconda3\\python.exe",
-=======
-    "python.pythonPath": "D:\\Anaconda\\python.exe",
-    "python.linting.pylintEnabled": true,
->>>>>>> Added logistic regression code
     "python.linting.enabled": true
 }
