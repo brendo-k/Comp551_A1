@@ -1,6 +1,7 @@
 import numpy as np
 
 def main():
+    
     file = open("Datasets/ionosphere.data", "r")
     lines = file.readlines()
     data = np.empty([351, 35])
@@ -33,14 +34,30 @@ def main():
 
 
 ##################################################################
+
+
+    #Use one-hot encoding for categorical features      
+    workclass = ["Private", "Self-emp-not-inc", "Self-emp-inc", 
+    "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"]
+    education = ["Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", 
+    "Assoc-voc", "9th", "7th-8th", "12th", "Masters", "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"]
+    maritalStatus = ["Married-civ-spouse", "Divorced", "Never-married", "Separated", "Widowed", "Married-spouse-absent", "Married-AF-spouse"]
+    occupation = ["Tech-support", "Craft-repair", "Other-service", "Sales", "Exec-managerial", "Prof-specialty", "Handlers-cleaners", 
+    "Machine-op-inspct", "Adm-clerical", "Farming-fishing", "Transport-moving", "Priv-house-serv", "Protective-serv", "Armed-Forces"]
+    relationship = []
+    race = []
+    sex = []
+    nativeCountry = []
+
+
     file = open("Datasets/adult.data", "r")
     lines = file.readlines()
-    data = np.empty([48842, 14], str)        ## initialize stuff to int by default?
+    data = np.empty([48842, 15], str)        # initializes stuff to numbers by default, need to explicitly typecast to string
     for i in range(len(lines)):
-        features =  lines[i].split(",")
+        features =  str(lines[i].split(","))
         for j in range(len(features) - 1):
             data[i,j] = features[j]
-    np.savetxt("Adult_Numpy_Array.txt", data, fmt='%1.5f')
+    np.savetxt("Adult_Numpy_Array.txt", data)
     print(data)
 
 if (__name__ == "__main__"):
