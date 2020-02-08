@@ -15,7 +15,7 @@ class LogisticRegression():
     
 
     
-    def gradienDescent(self, X, Y, learning ):
+    def gradientDescent(self, X, Y, learning ):
 
         step = 0
         while step < self.steps:
@@ -62,7 +62,7 @@ def main():
     Y = X[:, -1]
     X = X[:, 0:-1]
     lg = LogisticRegression(10000, X, Y)
-    lg.gradienDescent(X,Y, 0.01)
+    lg.gradientDescent(X,Y, 0.01)
     
     yClassified = lg.fit(X)
 
@@ -73,7 +73,7 @@ def main():
     FN = 0
     TN = 0
     FP = 0
-    for i in range(yClassified.shape[0]):
+    for i in range(yClassified.T.shape[0]):
         if(Y[i] == 1 and Y[i] == yClassified[i]):
             TP += 1
         else:
