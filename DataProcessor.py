@@ -15,8 +15,7 @@ def main():
             data[i, -1] = 0
     print(data[-1])
     np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
-    print(data)
-##################################################
+    #print(data)
 
 ###################################################
     # file1 = open("Datasets/Chess/krkopt.data", "r")
@@ -29,14 +28,10 @@ def main():
     #            data1[i,j] = (features1[j])
     #           data1[i,j] = (features1[j])
     # np.savetxt("Chess_Numpy_Array.txt", data1, fmt='%1.5f')
-
-
-
-
 ##################################################################
 
 
-    #Use one-hot encoding for categorical features      
+    # Use one-hot encoding for categorical features | 6 continuous, 8 nominal      
     workclass = ["Private", "Self-emp-not-inc", "Self-emp-inc", 
     "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"]
     education = ["Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", 
@@ -44,21 +39,64 @@ def main():
     maritalStatus = ["Married-civ-spouse", "Divorced", "Never-married", "Separated", "Widowed", "Married-spouse-absent", "Married-AF-spouse"]
     occupation = ["Tech-support", "Craft-repair", "Other-service", "Sales", "Exec-managerial", "Prof-specialty", "Handlers-cleaners", 
     "Machine-op-inspct", "Adm-clerical", "Farming-fishing", "Transport-moving", "Priv-house-serv", "Protective-serv", "Armed-Forces"]
-    relationship = []
-    race = []
-    sex = []
-    nativeCountry = []
+    relationship = ["Wife", "Own-child", "Husband", "Not-in-family", "Other-relative", "Unmarried"]
+    race = ["White", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other", "Black"]
+    sex = ["Female", "Male"]
+    nativeCountry = ["United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", 
+    "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", 
+    "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France","Dominican-Republic", 
+    "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", 
+    "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"]
 
 
     file = open("Datasets/adult.data", "r")
     lines = file.readlines()
-    data = np.empty([48842, 15], str)        # initializes stuff to numbers by default, need to explicitly typecast to string
+    data = np.zeros([48842, 6 + len(workclass) + len(education) + len(maritalStatus) + len(occupation)
+    + len(relationship) + len(race) + len(sex) + len(nativeCountry) + 1])        
+
+    
     for i in range(len(lines)):
         features =  str(lines[i].split(","))
-        for j in range(len(features) - 1):
-            data[i,j] = features[j]
+        if ("?" in features) == True:   # you don't populate the data, you leave it with zeros
+            break
+        else:
+            for j in range(len(features) - 1):
+                if features[j].isdigit() == True:   # numerical data
+                  #  data[i,j] = features[j]        # doesn't work
+                  print()
+                else:                               # categorical data
+
+                    if j == 1:     # workclass
+                        index = np.where(workclass == features[j]) # index of the feature in the one hot matrix
+                        # one_hotFeature = np.zeros([len(workclass), 0])
+                        # one_hotFeature[index] += 1
+                        # print(len(one_hotFeature))
+                        data[i,j + index] += 1
+                    
+                    if j == 3:      # education
+                        print()
+
+
+
+                
+            if(features[-1][0] == ">50K"):
+                data[i, -1] = 1
+            else:
+                data[i, -1] = 0
+
+    # remove all rows containing just zeros: data[~np.all(data == 0, axis=1)]
+
     np.savetxt("Adult_Numpy_Array.txt", data)
     print(data)
+
+
+
+
+
+
+
+
+
 
 if (__name__ == "__main__"):
     main()
