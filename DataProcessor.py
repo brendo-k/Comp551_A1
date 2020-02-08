@@ -89,7 +89,7 @@ def main():
 
     # remove all rows containing just zeros: data[~np.all(data == 0, axis=1)]
 
-    np.savetxt("Adult_Numpy_Array.txt", data)
+   # np.savetxt("Adult_Numpy_Array.txt", data) prints a too large file 
     print(data)
 
 
