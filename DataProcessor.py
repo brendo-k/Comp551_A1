@@ -48,6 +48,9 @@ def main():
     "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", 
     "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"]
 
+    #workclass_to_int = dict((c, i) for i, c in enumerate(workclass))
+    #int_to_workclass = dict((i, c) for i, c in enumerate(workclass))
+
 
     file = open("Datasets/adult.data", "r")
     lines = file.readlines()
@@ -56,31 +59,31 @@ def main():
 
     
     for i in range(len(lines)):
-        features =  str(lines[i].split(","))
+        features = lines[i].split(",")
         if ("?" in features) == True:   # you don't populate the data, you leave it with zeros
             break
         else:
             for j in range(len(features) - 1):
                 if features[j].isdigit() == True:   # numerical data
-                  #  data[i,j] = features[j]        # doesn't work
-                  print()
+                    data[i,j] = features[j]
                 else:                               # categorical data
-
                     if j == 1:     # workclass
-                        index = np.where(workclass == features[j]) # index of the feature in the one hot matrix
+                        index = np.where(workclass == features[j])         # index of the feature in the one hot matrix
                         # one_hotFeature = np.zeros([len(workclass), 0])
                         # one_hotFeature[index] += 1
                         # print(len(one_hotFeature))
-                        data[i,j + index] += 1
+                        data[i,j + index[0]] += 1
                     
                     if j == 3:      # education
-                        print()
+                        index = np.where(education == features[j])
+                        data[i,j + len(workclass) + index[0]] += 1
 
 
 
                 
             if(features[-1][0] == ">50K"):
                 data[i, -1] = 1
+                print("here")
             else:
                 data[i, -1] = 0
 
