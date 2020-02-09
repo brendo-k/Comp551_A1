@@ -13,7 +13,7 @@ def main():
             data[i, -1] = 1
         else:
             data[i, -1] = 0
-    print(data[-1])
+    #print(data[-1])
     np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
     #print(data)
 
@@ -57,7 +57,7 @@ def main():
     data = np.zeros([48842, 6 + len(workclass) + len(education) + len(maritalStatus) + len(occupation)
     + len(relationship) + len(race) + len(sex) + len(nativeCountry) + 1])        
 
-    
+    print(len(data[0]))
     for i in range(len(lines)):
         features = lines[i].split(",")
         if ("?" in features) == True:   # you don't populate the data, you leave it with zeros
