@@ -66,8 +66,8 @@ def main():
     
     yClassified = lg.fit(X)
 
-    print(Y)
-    print(yClassified)
+    #print(Y)
+    #print(yClassified)
 
     TP = 0
     FN = 0
@@ -76,15 +76,17 @@ def main():
     for i in range(yClassified.shape[0]):
         if(Y[i] == 1 and Y[i] == yClassified[i]):
             TP += 1
-        else:
+        elif(Y[i] == 0 and Y[i] != yClassified[i]):
             FN += 1
-        if(Y[i] == 0 and Y[i] == yClassified[i]):
+        elif(Y[i] == 0 and Y[i] == yClassified[i]):
             TN += 1
         else:
             FP += 1
+    
+    acc = float(TP + TN)/float(len(yClassified))
 
-
-    print("True positive: %d \n False Negative: %d \n True Negative: %d \n False Positive: %d" % (TP, FN, TN, FP))
+    print(" True positive: %d \n False Negative: %d \n True Negative: %d \n False Positive: %d" % (TP, FN, TN, FP))
+    print(" Accuracy: %f " % (acc))
 
 
 
