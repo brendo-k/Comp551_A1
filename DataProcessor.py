@@ -6,8 +6,10 @@ class DataProcessor():
         file = open("Datasets/ionosphere.data", "r")
         lines = file.readlines()
         data = np.empty([351, 35])
+
         for i in range(len(lines)):
             features =  lines[i].split(",")
+
             for j in range(len(features) - 1):
                 data[i,j] = float(features[j])
             if(features[-1][0] == "g"):
@@ -17,7 +19,7 @@ class DataProcessor():
         #print(data[-1])
         np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
         #print(data)
-        return 0
+
 
 
 
@@ -88,7 +90,22 @@ class DataProcessor():
 
     @staticmethod
     def cleanOzoneData():
-        return 0
+        file = open("Datasets/Ozone/onehr.data", "r")
+        lines = file.readlines()
+        data = np.empty([2536, 73])
+
+        for i in range(len(lines)):
+            features =  lines[i].split(",")
+
+            for j in range(len(features) - 1):
+                data[i,j] = float(features[j+1])    # ignore first column, useless feature
+        #     if(features[-1][0] == "g"):
+        #         data[i, -1] = 1
+        #     else:
+        #         data[i, -1] = 0
+        #print(data[-1])
+        #np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
+        #print(data)
 
 
     @staticmethod
