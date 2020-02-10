@@ -139,7 +139,7 @@ class DataProcessor():
 
 def main():
 
-    #DataProcessor.cleanIonosphereData()
+    DataProcessor.cleanIonosphereData()
     #DataProcessor.cleanAdultData()
     #DataProcessor.cleanOzoneData()
     #DataProcessor.cleanCancerData()
