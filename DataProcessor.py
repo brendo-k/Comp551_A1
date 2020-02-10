@@ -87,39 +87,62 @@ class DataProcessor():
         print(data)
 
 
-
+    # 1,0 | two classes 1: ozone day, 0: normal day
     @staticmethod
     def cleanOzoneData():
         file = open("Datasets/Ozone/onehr.data", "r")
         lines = file.readlines()
         data = np.empty([2536, 73])
+        listOfIndex = []
 
         for i in range(len(lines)):
             features =  lines[i].split(",")
 
-            for j in range(len(features) - 1):
-                data[i,j] = float(features[j+1])    # ignore first column, useless feature
-        #     if(features[-1][0] == "g"):
-        #         data[i, -1] = 1
-        #     else:
-        #         data[i, -1] = 0
-        #print(data[-1])
-        #np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
+            if ("?" in features) == True:   # you don't populate the data, you insert a flag, -1
+                listOfIndex.append(i)
+            else:
+                for j in range(len(features) - 1):
+                    data[i,j] = float(features[j+1])    # ignore first column, useless feature
+
+
+        
+        data = np.delete(data, listOfIndex, 0) # delete the rows missing features
+        np.savetxt("Ozone_Numpy_Array.txt", data, fmt='%1.5f')
         #print(data)
 
 
     @staticmethod
     def cleanCancerData():
-        return 0
+        file = open("Datasets/Cancer/breast-cancer-wisconsin.data", "r")
+        lines = file.readlines()
+        data = np.empty([699, 10], dtype=int)
+        listOfIndex = []
+
+        for i in range(len(lines)):
+            features =  lines[i].split(",")
+
+            if ("?" in features) == True:   # you don't populate the data, you insert flag, -1
+                listOfIndex.append(i)
+            else:
+                for j in range(len(features) - 1):
+                    data[i,j] = int(features[j+1])    # ignore first column, useless feature
+
+            if(features[-1][0] == "2"):
+                data[i, -1] = 1
+            else:
+                data[i, -1] = 0
 
 
-
+        
+        data = np.delete(data, listOfIndex, 0)      # delete the rows missing features
+        np.savetxt("Cancer_Numpy_Array.txt", data, fmt='%1.5f')
 
 def main():
 
-    DataProcessor.cleanIonosphereData()
+    #DataProcessor.cleanIonosphereData()
     #DataProcessor.cleanAdultData()
     #DataProcessor.cleanOzoneData()
+    #DataProcessor.cleanCancerData()
 
 
 
