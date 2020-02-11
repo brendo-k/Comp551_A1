@@ -10,9 +10,6 @@ class NaiveBayes():
     Y = np.zeros(0) # N x 1 
     
     def __init__(self, prior, likelihood, evidence, X, Y):
-        self.prior = prior
-        self.likelihood = likelihood
-        self.evidence = evidence
         self.X = X
         self.Y = Y
     
@@ -130,12 +127,13 @@ class NaiveBayes():
         return score * 100 / float(len(real)) 
         
 def main():
-    file = open("Ionosphere_Numpy_Array.txt", "r")
+    file = open("Adult_Numpy_Array.txt", "r")
     X = np.loadtxt(file) # data loaded into numpy array
     Y = X[:, -1]
     X_clean = np.delete(X, 1, 1)
+    X_unbiased = np.delete(X,8:10,1)
     X_clean = X_clean[:, 1:] # YOU MUST USE X_clean FOR IONOSPHERE!!!
-    accuracy, yPred, yClassified = NaiveBayes.eval(X_clean, 6)
+    accuracy, yPred, yClassified = NaiveBayes.eval(X_unbiased, 6)
     accuracy = list(np.around(accuracy, 3))
     av = np.round(np.average(accuracy), 3)
     for i in range(len(accuracy)):
