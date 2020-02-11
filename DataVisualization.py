@@ -5,8 +5,13 @@ class DataVisualization():
 
     @staticmethod
     def displayIonosphereData():
-        file = open("CleanDatasets/Ionosphere_Numpy_Array.txt", "r")
-        lines = file.readlines()
+        xMin = -1
+        xMax = 1
+
+        with open("CleanDatasets/Ionosphere_Numpy_Array.txt") as file:
+            lines = file.readlines()
+            x = [line.split()[0] for line in lines]
+            y = [line.split()[1] for line in lines]
 
         plt.title("My Plot")
         #x is 0, 1, 2, 3
