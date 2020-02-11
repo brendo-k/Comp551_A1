@@ -11,54 +11,58 @@ class LogisticRegression():
     reg = 0
 
     def __init__(self, X, Y, reg = 0):
-        self.weights = np.zeros(X.shape[1])
+        self.weights = np.zeros([1,X.shape[1]])
         self.X = X
         self.Y = Y
         self.reg = reg
     
 
     
-    def gradientDescent(self, X, Y, learning, threshold, regularization = 0):
-
+    def gradientDescent(self, X, Y, learning, steps = -1, regularization = 0, threshold = -1):
+        
         step = 0
-        while True:#np.linalg.norm(newWeigths - self.weights) > 0.1:
+        
+        while True:
             if(regularization == 0):
-                newWeigths = self.weights - learning * LogisticRegression.gradient(X, Y, self.weights)
+                lr = learning * self.gradient(X,Y)
+                newWeigths = self.weights - lr
             elif(regularization == 1):
-                newWeigths = self.weights - self.L2Gradient(X, Y, self.weights, learning)
-
+                reg = self.reg * self.weights
+                newWeigths = self.weights - learning * self.gradient(X, Y) - reg
             if(np.linalg.norm(self.weights - newWeigths) < threshold):
                 break
+            elif(step > steps):
+                break
             self.weights = newWeigths
+
             step += 1
-        print(step)
+        return step
         
 
 
     def fit(self, data):
-        y = np.dot(data, self.weights.T)
+        y = np.matmul(data, self.weights.T)
         y = LogisticRegression.logistic(y)
         lables = LogisticRegression.label(y)
         return lables
 
     @staticmethod
-    def crossValidation(data, k, lambd = 0):
+    def crossValidation(data, k, learning, thresh, lambd = 0):
         partions = np.array_split(data, k, 0)
         accAverage = np.zeros(k)
         trainAccuracy = np.zeros(k)
-        print (lambd)
+        steps = np.zeros(k)
         for i in range(len(partions)):
+            
             train = partions.copy()
             train = np.concatenate(train, 0)
             X = train[:, 0:-1]
-            Y = train[:,-1]
+            Y = train[:,-1:]
             lg = LogisticRegression(X, Y, lambd)
-            lg.gradientDescent(X, Y, 0.01, 1000, 1)
-
-
+            steps[i] = lg.gradientDescent(X, Y, learning, 5000, threshold=thresh)
 
             xValidate = partions[i][:, 0:-1]
-            yValidate = partions[i][:, -1]
+            yValidate = partions[i][:, -1:]
             validLabels = lg.fit(xValidate)
             [TP, FN, TN, FP] = LogisticRegression.confusionTable(validLabels, yValidate)
             accAverage[i] = float(TP + TN)/float(len(validLabels))
@@ -70,25 +74,19 @@ class LogisticRegression():
 
         accAverage = np.mean(accAverage)
         trainAccuracy = np.mean(trainAccuracy)
-        print("Average validation accuracy: {0}".format(np.mean(accAverage)))
-        print("Average train accuracy: {0}".format(np.mean(trainAccuracy)))
-        return accAverage, trainAccuracy
-
-
-    
-    def L2Gradient(self, X, Y, W, learning):
-        logis = LogisticRegression.logistic(np.dot(X, W))
-        gradient = learning * np.dot(X.T, logis - Y) + self.reg*W
-        return gradient
+        steps = np.mean(steps)
+        #print("Average validation accuracy: {0}".format(np.mean(accAverage)))
+        #print("Average train accuracy: {0}".format(np.mean(trainAccuracy)))
+        #print("Average steps:  {0}".format(steps) )
+        return accAverage, trainAccuracy, steps
 
     #X N x D
     #Y D x 1
     #W 1 x D
-    @staticmethod
-    def gradient(X, Y, W):
-        logis = LogisticRegression.logistic(np.dot(X, W.T))
+    def gradient(self, X, Y):
+        logis = LogisticRegression.logistic(np.dot(X, self.weights.T))
         gradient = np.dot(X.T,  logis - Y)
-        return gradient
+        return gradient.T
 
     @staticmethod
     def logistic(logit):
@@ -128,55 +126,70 @@ class LogisticRegression():
 
 def main():
     iono = np.loadtxt("CleanDatasets/Ionosphere_Numpy_Array.txt")
-    cancer = np.loadtxt("CleanDatasets/Ionosphere_Numpy_Array.txt")
+    #cancer = np.loadtxt("Cancer_Numpy_Array.txt")
+    #ozone = np.loadtxt("Ozone_Numpy_Array.txt")
+    data = iono
 
     x = data[:, 0:-1]
     y = data[:, -1]
     normalizeData = nomralize(data[:, 0:-1])
     normalizeData = np.append(normalizeData, data[:, -1:] , axis=1 )
-    threshold = np.linspace(0.01, 1, 20)
-    for i in threshold:
-        data = np.array_split(data, 10, 0)
+    data = np.array_split(data, 10, 0)
     
-        index = 0
+    index = 1
     test = data[index]
 
     del data[index]
     data = np.concatenate(data, 0)
-    LogisticRegression.crossValidation(data, 5)
 
-    X = data[:, 0:-1]
-    Y = data[:, -1]
-    lg = LogisticRegression(X,Y)
-    lg.gradientDescent(X, Y, 0.01, )
-    labels = lg.fit(test[:, 0:-1])
-    TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1])
+    learningRate = np.linspace(0.001, 0.01 , 20)
+    steps = []
+    validateAccuracy = []
+    testAcc = []
+    count = 0
+    for i in learningRate:
+        trainAcc, validateAcc, step = LogisticRegression.crossValidation(data, 5, i, 0.005)
+        validateAccuracy.append(validateAcc)
+        steps.append(step)
+        #count += 1
+        #X = data[:, 0:-1]
+        #Y = data[:, -1:]
+        #lg = LogisticRegression(X,Y)
+        #lg.gradientDescent(X, Y, i, 3000)
+        #labels = lg.fit(test[:, 0:-1])
+        #TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1])
+        #acc = float(TP + TN)/len(labels)
+        #testAcc.append(acc)
+    print(testAcc) 
 
-    acc = float(TP + TN)/len(labels)
-    print("final accuracy without regularization: {0}".format(acc))
+    plt.plot(learningRate, steps)
+    plt.title("Steps vs learning rate")
+    plt.xlabel("learning rate")
+    plt.ylabel("Steps")
+    print(steps)
+    plt.show()
+
+#    print("final accuracy without regularization: {0}".format(acc))
 
 
 
 
     
-    normalizeData = np.array_split(normalizeData, 10, 0)
-    test = normalizeData[index]
-    del normalizeData[index]
+    #normalizeData = np.array_split(normalizeData, 10, 0)
+    #test = normalizeData[index]
+    #del normalizeData[index]
 
-    normalizeData = np.concatenate(normalizeData, 0)
-    regulization = np.linspace(0, 10, 20)
+    #normalizeData = np.concatenate(normalizeData, 0)
+    #regulization = np.linspace(0, 1, 20)
 
     #accuracy = []
     #for lambd in regulization:
-    #    acc, _ = LogisticRegression.crossValidation(normalizeData, 5, lambd)
+    #    acc, _ = LogisticRegression.crossValidation(normalizeData, 5, 0, lambd=lambd)
     #    accuracy.append(acc)
     #plt.plot(regulization.T, accuracy)
     #plt.show()
     
     
-
-    
-
 
 
 def nomralize(input):
