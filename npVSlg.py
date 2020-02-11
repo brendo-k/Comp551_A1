@@ -42,7 +42,26 @@ def main():
     red_patch = mpatches.Patch(color='red', label='Logistic Regression')
     blue_patch = mpatches.Patch(color='blue', label='Naive Bayes')
     plt.legend(handles=[red_patch, blue_patch])
-    #plt.savefig('a.pdf')
+    plt.savefig('LRvsNB.pdf')
+    plt.show()
+    
+    
+    
+    bias_accs = [None]*5
+    nobias_accs = [None]*5
+    bias_accs = NaiveBayes.eval(adult_data, 5)[0]
+    nobias_accs = NaiveBayes.eval(unbiased_adult_data, 5)[0]
+    
+    plt.title("Adult with Gender/Race Bias vs Adult without Bias Features")
+    plt.plot(['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'], nobias_accs, 'b-o')
+    plt.plot(['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'], bias_accs, 'ro-')
+    plt.ylabel('Accuracy (%) ')
+    plt.xlabel("Datasets")
+    plt.ylim(75, 90)     # set the ylim to bottom, top
+    red_patch = mpatches.Patch(color='red', label='With Gender/Race Bias')
+    blue_patch = mpatches.Patch(color='blue', label='Without Gender/Race Bias')
+    plt.legend(handles=[red_patch, blue_patch])
+    plt.savefig('AWBvsAWNB.pdf')
     plt.show()
     
 if __name__ == "__main__":
