@@ -5,8 +5,16 @@ class DataVisualization():
 
     @staticmethod
     def displayIonosphereData():
-        file = open("Datasets/ionosphere.data", "r")
+        file = open("CleanDatasets/Ionosphere_Numpy_Array.txt", "r")
         lines = file.readlines()
+
+        plt.title("My Plot")
+        #x is 0, 1, 2, 3
+        plt.plot([1,2,3,4])
+        plt.ylabel('some numbers')
+        plt.xlabel('some numbers')
+        plt.savefig('a.pdf')
+        plt.show()
 
 
 
