@@ -127,8 +127,8 @@ class LogisticRegression():
 
 
 def main():
-    iono = np.loadtxt("Ionosphere_Numpy_Array.txt")
-    cancer = np.loadtxt("Ionosphere_Numpy_Array.txt")
+    iono = np.loadtxt("CleanDatasets/Ionosphere_Numpy_Array.txt")
+    cancer = np.loadtxt("CleanDatasets/Ionosphere_Numpy_Array.txt")
 
     x = data[:, 0:-1]
     y = data[:, -1]

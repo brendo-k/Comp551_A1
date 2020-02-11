@@ -104,7 +104,7 @@ class DataProcessor():
 
         
         data = np.delete(data, listOfIndex, 0) # delete the rows missing features
-        np.savetxt("Ozone_Numpy_Array.txt", data, fmt='%1.5f')
+        np.savetxt("CleanDatasets/Ozone_Numpy_Array.txt", data, fmt='%1.5f')
         #print(data)
 
 
@@ -132,7 +132,7 @@ class DataProcessor():
 
         
         data = np.delete(data, listOfIndex, 0)      # delete the rows missing features
-        np.savetxt("Cancer_Numpy_Array.txt", data, fmt='%1.5f')
+        np.savetxt("CleanDatasets/Cancer_Numpy_Array.txt", data, fmt='%1.5f')
 
 def main():
 

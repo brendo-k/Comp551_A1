@@ -83,7 +83,7 @@ class NaiveBayes():
         return summs
 
 def main():
-    file = open("Ionosphere_Numpy_Array.txt", "r")
+    file = open("CleanDatasets/Ionosphere_Numpy_Array.txt", "r")
     X = np.loadtxt(file) # data loaded into numpy array
     X_clean = np.delete(X, 1, 1)
     yClassified = X[:, -1] # extracting labels
