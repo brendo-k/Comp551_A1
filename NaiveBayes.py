@@ -131,8 +131,10 @@ def main():
     X = np.loadtxt(file) # data loaded into numpy array
     Y = X[:, -1]
     X_clean = np.delete(X, 1, 1)
+    X_unbiased = np.delete(X, 8, 1)
+    X_unbiased = np.delete(X_unbiased, 8, 1)
     X_clean = X_clean[:, 1:] # YOU MUST USE X_clean FOR IONOSPHERE!!!
-    accuracy, yPred, yClassified = NaiveBayes.eval(X, 6)
+    accuracy, yPred, yClassified = NaiveBayes.eval(X_unbiased, 5)
     accuracy = list(np.around(accuracy, 3))
     av = np.round(np.average(accuracy), 3)
     for i in range(len(accuracy)):
