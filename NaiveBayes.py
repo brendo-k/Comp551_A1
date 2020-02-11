@@ -1,5 +1,6 @@
 import numpy as np
 import random as rand
+import matplotlib as plt
 
 # as of right now, this only uploads ionosphere,               #
 # as this will be the first dataset i try using naive bayes on #
@@ -134,16 +135,25 @@ def main():
     X_unbiased = np.delete(X, 8, 1)
     X_unbiased = np.delete(X_unbiased, 8, 1)
     X_clean = X_clean[:, 1:] # YOU MUST USE X_clean FOR IONOSPHERE!!!
+    
+    accuracy1, yPred1, yClassified1 = NaiveBayes.eval(X, 5)
     accuracy, yPred, yClassified = NaiveBayes.eval(X_unbiased, 5)
+    accuracy1 = list(np.around(accuracy1, 3))
+    av1 = np.round(np.average(accuracy1), 3)
     accuracy = list(np.around(accuracy, 3))
     av = np.round(np.average(accuracy), 3)
     for i in range(len(accuracy)):
         accuracy[i] = str(accuracy[i]) + "% "
+        accuracy1[i] = str(accuracy1[i]) + "% "
     print("")
     print("Accuracy per fold test: ")
+    print(accuracy1)
+    print("Accuracy per fold test removing gender and race: ")
     print(accuracy)
     print("")
     print("Average accuracy:")
+    print(str(av1)+"%")
+    print("Average accuracy removing gender and race:")
     print(str(av)+"%")
     print("")
     print("Test Set Break-Down:")
