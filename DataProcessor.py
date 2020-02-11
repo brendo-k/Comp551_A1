@@ -17,7 +17,7 @@ class DataProcessor():
             else:
                 data[i, -1] = 0
         #print(data[-1])
-        np.savetxt("Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
+        np.savetxt("CleanDatasets/Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
         #print(data)
 
 
@@ -100,18 +100,15 @@ class DataProcessor():
                     else:                               # categorical data
                         if j == 1:     # workclass
                             index = np.where(workclass == features[j])         # index of the feature in the one hot matrix
-                            # one_hotFeature = np.zeros([len(workclass), 0])
-                            # one_hotFeature[index] += 1
-                            # print(len(one_hotFeature))
                             data[i,j + index[0]] += 1
                         
                         if j == 3:      # education
                             index = np.where(education == features[j])
                             data[i,j + len(workclass) + index[0]] += 1
 
+                        if j == 5:      # marital-status
+                            print()
 
-
-                    
                 if(features[-1][0] == ">50K"):
                     data[i, -1] = 1
                     print("here")
@@ -144,7 +141,7 @@ class DataProcessor():
 
         
         data = np.delete(data, listOfIndex, 0) # delete the rows missing features
-        np.savetxt("Ozone_Numpy_Array.txt", data, fmt='%1.5f')
+        np.savetxt("CleanDatasets/Ozone_Numpy_Array.txt", data, fmt='%1.5f')
         #print(data)
 
 
@@ -172,12 +169,14 @@ class DataProcessor():
 
         
         data = np.delete(data, listOfIndex, 0)      # delete the rows missing features
-        np.savetxt("Cancer_Numpy_Array.txt", data, fmt='%1.5f')
+        np.savetxt("CleanDatasets/Cancer_Numpy_Array.txt", data, fmt='%1.5f')
 
 def main():
 
     #DataProcessor.cleanIonosphereData()
     DataProcessor.cleanAdultData1()
+    DataProcessor.cleanIonosphereData()
+    # DataProcessor.cleanAdultData()
     #DataProcessor.cleanOzoneData()
     #DataProcessor.cleanCancerData()
 
@@ -186,17 +185,4 @@ def main():
 
 if (__name__ == "__main__"):
     main()
-    
-###################################################
-    # file1 = open("Datasets/Chess/krkopt.data", "r")
-    # lines1 = file1.readlines()
-    # data1 = np.empty([28056, 6])
-    # for i in range(len(lines1)-1):
-    #     features1 =  lines1[i].split(",")
-    #     for j in range(len(features1) - 1):
-    #        if j%2==0:
-    #            data1[i,j] = (features1[j])
-    #           data1[i,j] = (features1[j])
-    # np.savetxt("Chess_Numpy_Array.txt", data1, fmt='%1.5f')
-##################################################################
 
