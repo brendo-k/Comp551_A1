@@ -17,7 +17,14 @@ class DataProcessor():
                 data[i, -1] = 1
             else:
                 data[i, -1] = 0
+<<<<<<< HEAD
         np.savetxt("CleanDatasets/Ionosphere_Numpy_Array.txt", data, fmt='%1.5f')
+=======
+        #print(data[-1])
+        np.savetxt("CleanDatasets/Ionosphere_Numpy_Array.txt", data, fmt="%1.5f")
+        #print(data)
+
+>>>>>>> f89e4b0f4675fa1d6cd823eccf30a0e87cadb16f
 
     @staticmethod
     def cleanAdultData():
