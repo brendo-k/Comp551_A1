@@ -128,7 +128,7 @@ class NaiveBayes():
         return score * 100 / float(len(real)) 
         
 def main():
-    file = open("Adult_Numpy_Array.txt", "r")
+    file = open("CleanDatasets/Cancer_Numpy_Array.txt", "r")
     X = np.loadtxt(file) # data loaded into numpy array
     Y = X[:, -1]
     X_clean = np.delete(X, 1, 1)
@@ -137,7 +137,7 @@ def main():
     X_clean = X_clean[:, 1:] # YOU MUST USE X_clean FOR IONOSPHERE!!!
     
     accuracy1, yPred1, yClassified1 = NaiveBayes.eval(X, 5)
-    accuracy, yPred, yClassified = NaiveBayes.eval(X_unbiased, 5)
+    accuracy, yPred, yClassified = NaiveBayes.eval(X, 5)
     accuracy1 = list(np.around(accuracy1, 3))
     av1 = np.round(np.average(accuracy1), 3)
     accuracy = list(np.around(accuracy, 3))
