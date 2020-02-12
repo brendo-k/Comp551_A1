@@ -76,9 +76,9 @@ class LogisticRegression():
         accAverage = np.mean(accAverage)
         trainAccuracy = np.mean(trainAccuracy)
         steps = np.mean(steps)
-        print("Average validation accuracy: {0}".format(np.mean(accAverage)))
-        print("Average train accuracy: {0}".format(np.mean(trainAccuracy)))
-        print("Average steps:  {0}".format(steps) )
+        #print("Average validation accuracy: {0}".format(np.mean(accAverage)))
+        #print("Average train accuracy: {0}".format(np.mean(trainAccuracy)))
+        #print("Average steps:  {0}".format(steps) )
         return accAverage, trainAccuracy, steps
 
     #X N x D
@@ -133,39 +133,69 @@ def main():
     ozone = np.loadtxt("CleanDatasets/Ozone_Numpy_Array.txt")
     adult = np.loadtxt("CleanDatasets/Adult_Numpy_Array.txt")
 
-    data = ozone
-    #calculateAccuracy(data)
-    #learningRate = np.linspace(0.001, 0.01 , 20)
-    #steps = []
-    #validateAccuracy = []
-    #testAcc = []
-    #count = 0
-    #for i in learningRate:
-        #trainAcc, validateAcc, step = LogisticRegression.crossValidation(data, 5, i, 0.005)
-        #validateAccuracy.append(validateAcc)
-        #steps.append(step)
-        #count += 1
-        #X = data[:, 0:-1]
-        #Y = data[:, -1:]
-        #lg = LogisticRegression(X,Y)
-        #lg.gradientDescent(X, Y, i, 3000)
-        #labels = lg.fit(test[:, 0:-1])
-        #TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1])
-        #acc = float(TP + TN)/len(labels)
-        #testAcc.append(acc)
-    #print(testAcc) 
+    data = cancer 
 
-    #plt.plot(learningRate, steps)
-    #plt.title("Steps vs learning rate")
-    #plt.xlabel("learning rate")
-    #plt.ylabel("Steps")
-    #print(steps)
-    #plt.show()
-
-#    print("final accuracy without regularization: {0}".format(acc))
+    
+    
+    calculateAccuracy(data)
+    
 
 
+    normalizeData = nomralize(data[:, 0:-1])
+    normalizeData = np.concatenate((normalizeData, data[:, -1:]), 1)
+    normalizeData, test = split(normalizeData)
+    lg = LogisticRegression(normalizeData[:, 0:-1], normalizeData[:, -1:], 0.01)
+    lg.gradientDescent(normalizeData[:, 0:-1], normalizeData[:, -1:], 0.04, 1000)
+    labels = lg.fit(test[:, 0:-1])
+    TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1:])
+    acc = float(TP + TN)/len(labels)
+    print("final accuracy reg: {0}".format(acc))
+    
+    
+    
+def calculateAccuracy(data):    
+    data, test = split(data)
 
+    trainAcc, validationAcc, steps = LogisticRegression.crossValidation(data, 5, 0.004, 0.005)
+    
+    X = data[:, 0:-1]
+    Y = data[:, -1:]
+    lg = LogisticRegression(X,Y)
+    lg.gradientDescent(X, Y, 0.004, 1000)
+    labels = lg.fit(test[:, 0:-1])
+    TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1:])
+    acc = float(TP + TN)/len(labels)
+    print("final accuracy: {0}".format(acc))
+    return acc
+
+
+def testTrainSize(data):
+    data = np.array_split(data, 10, 0)
+    test = data[9]
+    accuracy = []
+    for i in range(9):
+        subset = []
+        for j in range(i+1):
+            subset.append(data[j])
+        subset = np.concatenate(subset, 0)
+        print(subset.shape)
+        X = subset[:, 0:-1]
+        Y = subset[:, -1:]
+        lg = LogisticRegression(X,Y)
+        lg.gradientDescent(X, Y, 0.004, 1000)
+        labels = lg.fit(test[:, 0:-1])
+        TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1:])
+        acc = float(TP + TN)/len(labels)
+        accuracy.append(acc)
+        print("final accuracy: {0}".format(acc))
+    
+    plt.plot((np.linspace(1,9,9))*10, accuracy)
+    plt.xlabel("precentage used to train")
+    plt.ylabel("accuracy")
+    plt.title("Accuracy with different training sizese")
+    plt.show()
+
+def compareL2(data):
     normalizeData = nomralize(data[:, 0:-1])
     normalizeData = np.concatenate((normalizeData, data[:, -1:]), 1)
     index = 0
@@ -181,52 +211,52 @@ def main():
     for lambd in regulization:
        acc, validationAcc, _ = LogisticRegression.crossValidation(normalizeData, 5, 0.004, 0.005, lambd=lambd)
        accuracy.append(acc)
-
-    #lg = LogisticRegression(normalizeData[:, 0:-1], normalizeData[:, -1:], 0.01)
-    #lg.gradientDescent(normalizeData[:, 0:-1], normalizeData[:, -1:], 0.04, 1000)
-    #labels = lg.fit(test[:, 0:-1])
-    #TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1:])
-    #acc = float(TP + TN)/len(labels)
-    #print("final accuracy reg: {0}".format(acc))
     
     plt.plot(regulization.T, accuracy)
     plt.title("Accuracy vs regularization strength")
     plt.xlabel("lambda")
     plt.ylabel("Accuracy")
     plt.show()
+
     
-def calculateAccuracy(data):    
-    data = np.array_split(data, 10, 0)
+    
+def compareLearning(data):
+    data, test = split(data)
+    learningRate = np.linspace(0.001, 0.01 , 20)
+    steps = []
+    validateAccuracy = []
+    testAcc = []
+    count = 0
+    for i in learningRate:
+        trainAcc, validateAcc, step = LogisticRegression.crossValidation(data, 5, i, 0.005)
+        validateAccuracy.append(validateAcc)
+        steps.append(step)
+        count += 1
+        X = data[:, 0:-1]
+        Y = data[:, -1:]
+        lg = LogisticRegression(X,Y)
+        lg.gradientDescent(X, Y, i, 3000)
+        labels = lg.fit(test[:, 0:-1])
+        TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1])
+        acc = float(TP + TN)/len(labels)
+        testAcc.append(acc)
+
+    plt.plot(testAcc, steps)
+    plt.title("Steps vs learning rate")
+    plt.xlabel("learning rate")
+    plt.ylabel("Steps")
+    plt.show()
+
+
+def split(dataset):
+    data = np.array_split(dataset, 10, 0)
     
     index = 0
     test = data[index]
 
     del data[index]
     data = np.concatenate(data, 0)
-
-    trainAcc, validationAcc, steps = LogisticRegression.crossValidation(data, 5, 0.004, 0.005)
-    
-    X = data[:, 0:-1]
-    Y = data[:, -1:]
-    lg = LogisticRegression(X,Y)
-    lg.gradientDescent(X, Y, 0.004, 1000)
-    labels = lg.fit(test[:, 0:-1])
-    TP, FN, TN, FP = LogisticRegression.confusionTable(labels, test[:, -1:])
-    acc = float(TP + TN)/len(labels)
-    print("final accuracy: {0}".format(acc))
-    return acc
-
-def variableTrainSize(data):
-    data = np.array_split(data, 10, 0)
-    
-    index = 0
-    test = data[index]
-
-    del data[index]
-    data = np.concatenate(data, 0)
-
-
-    
+    return data, test
 
 def nomralize(input):
     data = np.copy(input)
