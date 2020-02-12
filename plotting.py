@@ -42,7 +42,7 @@ def main():
     red_patch = mpatches.Patch(color='red', label='Logistic Regression')
     blue_patch = mpatches.Patch(color='blue', label='Naive Bayes')
     plt.legend(handles=[red_patch, blue_patch])
-    plt.savefig('LRvsNB.pdf')
+    plt.savefig('LRvsNB.jpg')
     plt.show()
     
     
@@ -61,7 +61,7 @@ def main():
     red_patch = mpatches.Patch(color='red', label='With Gender/Race Bias')
     blue_patch = mpatches.Patch(color='blue', label='Without Gender/Race Bias')
     plt.legend(handles=[red_patch, blue_patch])
-    plt.savefig('AWBvsAWNB.pdf')
+    plt.savefig('AWBvsAWNB.jpg')
     plt.show()
     
 if __name__ == "__main__":
