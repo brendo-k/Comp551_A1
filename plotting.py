@@ -28,10 +28,10 @@ def main():
     nbaccs[2] = np.average(np.around(NaiveBayes.eval(ozone_data, 5)[0], 3))
     nbaccs[3] = np.average(np.around(NaiveBayes.eval(adult_data, 5)[0], 3))
 
-    lraccs[0] = 85. #np.average(np.around(NaiveBayes.eval(cancer_data, 5)[0], 3))
-    lraccs[1] = 95. #np.average(np.around(NaiveBayes.eval(ionosphere_data, 5)[0], 3))
-    lraccs[2] = 75. #np.average(np.around(NaiveBayes.eval(ozone_data, 5)[0], 3))
-    lraccs[3] = 83. #np.average(np.around(NaiveBayes.eval(adult_data, 5)[0], 3))
+    lraccs[0] = 100*LogisticRegression.calculateAccuracy(cancer_data)
+    lraccs[1] = 100*LogisticRegression.calculateAccuracy(ionosphere_data)
+    lraccs[2] = 100*LogisticRegression.calculateAccuracy(ozone_data)
+    lraccs[3] = 100*LogisticRegression.calculateAccuracy(adult_data)
     
     plt.title("Logistic Regression vs. Naive Bayes")
     plt.plot(['Cancer Dataset', 'Ionosphere Dataset', 'Ozone Dataset', 'Adult Dataset'], nbaccs, 'b-o')
