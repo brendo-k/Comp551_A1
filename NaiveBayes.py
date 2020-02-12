@@ -1,9 +1,5 @@
 import numpy as np
 import random as rand
-import matplotlib as plt
-
-# as of right now, this only uploads ionosphere,               #
-# as this will be the first dataset i try using naive bayes on #
 
 class NaiveBayes():
     
@@ -37,7 +33,7 @@ class NaiveBayes():
         return best_label
     
     @staticmethod
-    def nb(training_data, test_data):
+    def nb(training_data, test_data): # brings together the helper functions to return predictions
         trained = NaiveBayes.summarizeClass(training_data)
         pred = list()
         for instance in test_data:
@@ -47,7 +43,7 @@ class NaiveBayes():
         
         
     @staticmethod    
-    def gaussProb(x, mean, std):
+    def gaussProb(x, mean, std): # calculates the likelihood term
         exp = np.exp(-((x-mean)**2)/(2 * (std**2)))
         prob = exp * (1 / (np.sqrt(2 * np.pi) * std))
         return prob
@@ -70,7 +66,7 @@ class NaiveBayes():
         return summs
     
     @staticmethod
-    def summarizeClass(data): 
+    def summarizeClass(data): # creates a dictionary from the labels to summaries of their given instances
         split = NaiveBayes.splitData(data)
         summs = dict()
         for label, instances in split.items():
@@ -78,9 +74,9 @@ class NaiveBayes():
         return summs
     
     @staticmethod
-    def crossValidation(data, n):
+    def crossValidation(data, n): # creates the folded data
         data_folded = list()
-        data_copy = list(data) #list?
+        data_copy = list(data) 
         fold_size = int(len(data) / n)
         for _ in range(n):
             fold = list()
@@ -91,7 +87,7 @@ class NaiveBayes():
         return data_folded
     
     @staticmethod
-    def removeFold(folds, fold):
+    def removeFold(folds, fold): # removes a single fold from a list of folds
         i = 0
         size = len(folds)
         while i != size and not np.array_equal(folds[i], fold):
@@ -127,7 +123,7 @@ class NaiveBayes():
                 score += 1
         return score * 100 / float(len(real)) 
         
-def main():
+def main(): # code to follow is just one example of calls we made throughout our testing process, formal solutions can be found in the report
     file = open("CleanDatasets/Cancer_Numpy_Array.txt", "r")
     X = np.loadtxt(file) # data loaded into numpy array
     Y = X[:, -1]
@@ -136,25 +132,25 @@ def main():
     X_unbiased = np.delete(X_unbiased, 8, 1)
     X_clean = X_clean[:, 1:] # YOU MUST USE X_clean FOR IONOSPHERE!!!
     
-    accuracy1, yPred1, yClassified1 = NaiveBayes.eval(X, 5)
-    accuracy, yPred, yClassified = NaiveBayes.eval(X, 5)
+    accuracy1, yPred, yClassified = NaiveBayes.eval(X, 5)
+    #accuracy, yPred, yClassified = NaiveBayes.eval(X, 5)
     accuracy1 = list(np.around(accuracy1, 3))
     av1 = np.round(np.average(accuracy1), 3)
-    accuracy = list(np.around(accuracy, 3))
-    av = np.round(np.average(accuracy), 3)
-    for i in range(len(accuracy)):
-        accuracy[i] = str(accuracy[i]) + "% "
+    #accuracy = list(np.around(accuracy, 3))
+    #av = np.round(np.average(accuracy), 3)
+    for i in range(len(accuracy1)):
+        #accuracy[i] = str(accuracy[i]) + "% "
         accuracy1[i] = str(accuracy1[i]) + "% "
     print("")
     print("Accuracy per fold test: ")
     print(accuracy1)
-    print("Accuracy per fold test removing gender and race: ")
-    print(accuracy)
+    #print("Accuracy per fold test removing gender and race: ")
+    #print(accuracy)
     print("")
     print("Average accuracy:")
     print(str(av1)+"%")
-    print("Average accuracy removing gender and race:")
-    print(str(av)+"%")
+    #print("Average accuracy removing gender and race:")
+    #print(str(av)+"%")
     print("")
     print("Test Set Break-Down:")
     TP = 0
